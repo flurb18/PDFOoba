@@ -62,7 +62,7 @@ def ui():
             with gr.Tab(label="Query"):
                 pass
         with gr.Group():
-            output = gr.HTML(label="Output", show_label=true, value="")
+            output = gr.HTML(label="Output", show_label=True, value="")
 
         summarize_event = summarize_once_button.click(
             gather_interface_values,
