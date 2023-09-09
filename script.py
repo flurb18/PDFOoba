@@ -50,8 +50,6 @@ def ui():
                 label='Upload your PDF/ Research Paper / Book here', file_types=['.pdf']
             )
             import_button = gr.Button("Import text from PDF")
-            loaded_text = gr.Textbox(label="Loaded text:", interactive = False)
-            token_count_textbox = gr.Textbox(label="Token count:", interactive = False)
             with gr.Tab(label="Summarize"):
                 chunk_size_slider = gr.Slider(512, 4096, value=1024, step=64, label="Chunk Size (Tokens)")
                 chunk_overlap_slider = gr.Slider(0, 256, value=0, label="Chunk Overlap (Tokens)")
@@ -61,6 +59,8 @@ def ui():
                 cancel_button = gr.Button("Cancel")
             with gr.Tab(label="Query"):
                 pass
+            loaded_text = gr.Textbox(label="Loaded text:", max_lines=20, interactive = False)
+            token_count_textbox = gr.Textbox(label="Token count:", interactive = False)
         with gr.Column():
             output = gr.HTML(label="Output", show_label=True, value="")
 
