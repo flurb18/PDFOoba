@@ -19,14 +19,15 @@ def preprocess(text):
     return text
 
 def pdf_to_text(fileObject):
+    if fileObject is None:
+        return "No pdf is uploaded", 0
     doc = fitz.open(fileObject.name)
     text = "\n\n".join([preprocess(doc.load_page(i).get_text("text")) for i in range(doc.page_count)])
     doc.close()
     if shared.tokenizer is None:
-        enc_length = "No model/tokenizer is loaded"
+        return "No model/tokenizer is loaded", 0
     else:
-        enc_length = get_encoded_length(text)
-    return text, enc_length
+        return text, get_encoded_length(text)
 
 def ui():
     state = gr.State({})
@@ -36,6 +37,7 @@ def ui():
             f = gr.File(
                 label='Upload your PDF/ Research Paper / Book here', file_types=['.pdf']
             )
+            import_button = gr.Button("Import text from PDF")
             with gr.Tab(label="Summarize"):
                 chunk_size_slider = gr.Slider(256, 2048, value=1024, step=64, label="Chunk Size (Tokens)")
                 chunk_overlap_slider = gr.Slider(0, 128, value=0, label="Chunk Overlap (Tokens)")
@@ -69,7 +71,7 @@ def ui():
             outputs = [output, token_count_textbox]
         )
 
-        upload_event = f.upload(
+        import_event = import_button.click(
             pdf_to_text,
             inputs = [f],
             outputs = [output, token_count_textbox],
@@ -83,7 +85,7 @@ def ui():
             cancel_summaries,
             inputs=None,
             outputs=None,
-            cancels=[summarize_event, summarize_until_desired_event, upload_event]
+            cancels=[summarize_event, summarize_until_desired_event, import_event]
         )
         
         
