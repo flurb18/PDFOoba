@@ -17,7 +17,10 @@ def summarize_text(text, c_size, c_overlap, state):
         chunks = text_splitter.split_text(text)
         summaries = []
         for i in range(len(chunks)):
-            prompt = f"Text:\n\n{chunks[i]}\n\nInstructions: Summarize the text above. Respond with your summary and nothing else.\n\nSummary:"
+            instruct = """Instructions:
+Summarize the text above. Try to keep the structure and important information of the text while using less words.
+Respond with your summary and nothing else."""
+            prompt = f"Text:\n{chunks[i]}\n\n{instruct}\n\nSummary:"
             for a in generate_reply(prompt, state):
                 if isinstance(a, str):
                     answer = a
