@@ -31,7 +31,8 @@ def pdf_to_text(fileObject):
 
 def format_text_html(text):
     enc_length = "No model/tokenizer is loaded" if shared.tokenizer is None else get_encoded_length(text)
-    return f"<br>Tokens: {escape(str(enc_length))}<br><br>Summarized Text:<br>{"<br>".join(escape(text).splitlines())}"
+    formatted_text = "<br>".join(escape(text).splitlines())
+    return f"<br>Tokens: {escape(str(enc_length))}<br><br>Summarized Text:<br>{formatted_text}"
 
 def generate_summary(*args):
     for out in summarize_text(*args):
