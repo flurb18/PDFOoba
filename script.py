@@ -38,6 +38,8 @@ def ui():
                 label='Upload your PDF/ Research Paper / Book here', file_types=['.pdf']
             )
             import_button = gr.Button("Import text from PDF")
+            current_text = gr.Textbox(label="Loaded text:", interactive = False)
+            token_count_textbox = gr.Textbox(label="Token count:", interactive = False)
             with gr.Tab(label="Summarize"):
                 chunk_size_slider = gr.Slider(256, 2048, value=1024, step=64, label="Chunk Size (Tokens)")
                 chunk_overlap_slider = gr.Slider(0, 128, value=0, label="Chunk Overlap (Tokens)")
@@ -48,7 +50,6 @@ def ui():
             with gr.Tab(label="Query"):
                 pass
         with gr.Group():
-            token_count_textbox = gr.Textbox(label="Token count:", interactive = False)
             output = gr.Textbox(label='Output:', interactive = False)
 
         summarize_event = summarize_once_button.click(
@@ -57,8 +58,8 @@ def ui():
             outputs=state
         ).then(
             summarize_text,
-            inputs = [output, chunk_size_slider, chunk_overlap_slider, state],
-            outputs = [output, token_count_textbox]
+            inputs = [current_text, chunk_size_slider, chunk_overlap_slider, state],
+            outputs = [output]
         )
 
         summarize_until_desired_event = summarize_until_desired_button.click(
@@ -67,14 +68,14 @@ def ui():
             outputs=state
         ).then(
             summarize_text_to_size,
-            inputs = [output, chunk_size_slider, chunk_overlap_slider, end_size_slider, state],
-            outputs = [output, token_count_textbox]
+            inputs = [current_text, chunk_size_slider, chunk_overlap_slider, end_size_slider, state],
+            outputs = [output]
         )
 
         import_event = import_button.click(
             pdf_to_text,
             inputs = [f],
-            outputs = [output, token_count_textbox],
+            outputs = [current_text, token_count_textbox],
             cancels=[summarize_event, summarize_until_desired_event]
         )
 
