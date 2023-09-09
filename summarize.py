@@ -18,7 +18,7 @@ def summarize_text(text, c_size, c_overlap, final_size, state):
             else:
                 answer = a[0]
         summaries.append(answer)
-    new_text = summaries.join("\n")
+    new_text = "\n".join(summaries)
     if get_encoded_length(new_text) > get_encoded_length(text):
         return "Error, summary was longer than original. Try a larger final size, larger chunk size, or smaller chunk overlap."
     if get_encoded_length(new_text) > final_size:

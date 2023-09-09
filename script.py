@@ -18,7 +18,7 @@ def preprocess(text):
 
 def pdf_to_text(fileObject):
     doc = fitz.open(fileObject.name)
-    text = [preprocess(doc.load_page(i).get_text("text")) for i in range(doc.page_count)].join("\n\n")
+    text = "\n\n".join([preprocess(doc.load_page(i).get_text("text")) for i in range(doc.page_count)])
     doc.close()
     return text
 
