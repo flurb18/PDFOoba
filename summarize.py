@@ -14,7 +14,7 @@ def summarize_text(text, c_size, c_overlap, state):
             chunk_overlap  = c_overlap,
             length_function = get_encoded_length
         )
-        chunks = text_splitter.create_documents([text])
+        chunks = text_splitter.split_text(text)
         summaries = []
         for i in range(len(chunks)):
             prompt = f"Text:\n\n{chunks[i]}\n\nInstructions: Summarize the text above. Respond with your summary and nothing else.\n\nSummary:"
