@@ -2,7 +2,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 from modules.text_generation import get_encoded_length, generate_reply
 
-def summarize_text(text, c_size, c_overlap, final_size, state):
+def summarize_text(text, c_size, c_overlap, state):
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size = c_size,
         chunk_overlap  = c_overlap,
@@ -19,8 +19,12 @@ def summarize_text(text, c_size, c_overlap, final_size, state):
                 answer = a[0]
         summaries.append(answer)
     new_text = "\n".join(summaries)
-    if get_encoded_length(new_text) > get_encoded_length(text):
-        return "Error, summary was longer than original. Try a larger final size, larger chunk size, or smaller chunk overlap."
-    if get_encoded_length(new_text) > final_size:
-        return summarize_text(new_text, c_size, c_overlap, final_size, state)
-    return new_text
+    return new_text, get_encoded_length(new_text)
+
+def summarize_text_to_size(text, c_size, c_overlap, final_size, state):
+    new_text, new_encode_len = summarize_text(text, c_size, c_overlap, state)
+    yield new_text, new_encode_len
+    if new_encode_len > get_encoded_length(text):
+        return "Error, summary was longer than original. Try a larger desired size, larger chunk size, or smaller chunk overlap."
+    if new_encode_len > final_size:
+        yield from summarize_text_to_size(new_text, c_size, c_overlap, final_size, state)
