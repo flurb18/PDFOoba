@@ -38,7 +38,7 @@ def generate_summary(*args):
     for out in summarize_text(*args):
         yield format_text_html(out)
 
-def generate_summary_sized(text):
+def generate_summary_sized(*args):
     for out in summarize_text_to_size(*args):
         yield format_text_html(out)
 
