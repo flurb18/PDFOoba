@@ -50,7 +50,7 @@ def ui():
             with gr.Tab(label="Query"):
                 pass
         with gr.Group():
-            output = gr.Textbox(label='Output:', interactive = False)
+            output = gr.Textbox(label='Output:', interactive = False, max_lines=999999)
 
         summarize_event = summarize_once_button.click(
             gather_interface_values,

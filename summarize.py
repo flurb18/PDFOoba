@@ -33,8 +33,9 @@ def summarize_text_to_size(text, c_size, c_overlap, final_size, state):
         yield "No text to summarize"
     else:
         encode_len = final_size+1 # Always guarantee one summary
+        t = text
         while encode_len > final_size:
-            for s in summarize_text(text, c_size, c_overlap, state):
+            for s in summarize_text(t, c_size, c_overlap, state):
                 yield s
-                summary = s
-            encode_len = get_encoded_length(summary)
+                t = s
+            encode_len = get_encoded_length(t)
