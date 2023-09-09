@@ -37,9 +37,9 @@ def ui():
                 label='Upload your PDF/ Research Paper / Book here', file_types=['.pdf']
             )
             with gr.Tab(label="Summarize"):
-                chunk_size_slider = gr.Slider(256, 2048, value=256, step=64, label="Chunk Size (Tokens)")
+                chunk_size_slider = gr.Slider(256, 2048, value=1024, step=64, label="Chunk Size (Tokens)")
                 chunk_overlap_slider = gr.Slider(0, 128, value=0, label="Chunk Overlap (Tokens)")
-                end_size_slider = gr.Slider(128, 65536, value=1024, step=64, label="Desired Text Size (Tokens)")
+                end_size_slider = gr.Slider(128, 65536, value=4096, step=64, label="Desired Text Size (Tokens)")
                 summarize_once_button = gr.Button("Summarize once", variant="primary")
                 summarize_until_desired_button = gr.Button("Summarize until Desired Text Size", variant="primary")
                 cancel_button = gr.Button("Cancel")
