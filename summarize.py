@@ -29,5 +29,5 @@ def summarize_text_to_size(text, c_size, c_overlap, final_size, state):
         yield new_text, new_encode_len
         if new_encode_len > get_encoded_length(text):
             yield "Error, summary was longer than original. Try a larger desired size, larger chunk size, or smaller chunk overlap."
-        else if new_encode_len > final_size:
+        elif new_encode_len > final_size:
             yield from summarize_text_to_size(new_text, c_size, c_overlap, final_size, state)
