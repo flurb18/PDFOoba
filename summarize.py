@@ -37,5 +37,6 @@ def summarize_text_to_size(text, c_size, c_overlap, final_size, state):
         while encode_len > final_size:
             for s in summarize_text(t, c_size, c_overlap, state):
                 yield s
-                t = s
+                tmp = s
+            t = tmp
             encode_len = get_encoded_length(t)
