@@ -34,9 +34,16 @@ def format_text_html(text):
     enc_length = "No model/tokenizer is loaded" if shared.tokenizer is None else get_encoded_length(text)
     return f"Tokens: {escape(str(enc_length))}<br><br>Summarized Text:<br>{escape(text)}"
 
+def generate_summary(*args):
+    for out in summarize_text(*args):
+        yield format_text_html(out)
+
+def generate_summary_sized(text):
+    for out in summarize_text_to_size(*args):
+        yield format_text_html(out)
+
 def ui():
     state = gr.State({})
-    current_text = gr.State("")
     with gr.Row():
         with gr.Column():
             f = gr.File(
@@ -55,19 +62,15 @@ def ui():
             with gr.Tab(label="Query"):
                 pass
         with gr.Group():
-            output = gr.HTML(label='Output', value="")
+            output = gr.HTML(label="Output", show_label=true, value="")
 
         summarize_event = summarize_once_button.click(
             gather_interface_values,
             inputs=gradio(list_interface_input_elements()),
             outputs=state
         ).then(
-            summarize_text,
+            generate_summary,
             inputs = [loaded_text, chunk_size_slider, chunk_overlap_slider, state],
-            outputs = [current_text]
-        ).then(
-            format_text_html,
-            inputs = [current_text],
             outputs = [output]
         )
 
@@ -76,12 +79,8 @@ def ui():
             inputs=gradio(list_interface_input_elements()),
             outputs=state
         ).then(
-            summarize_text_to_size,
+            generate_summary_sized,
             inputs = [loaded_text, chunk_size_slider, chunk_overlap_slider, end_size_slider, state],
-            outputs = [current_text]
-        ).then(
-            format_text_html,
-            inputs = [current_text],
             outputs = [output]
         )
 
