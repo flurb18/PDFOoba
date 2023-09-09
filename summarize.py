@@ -22,9 +22,12 @@ def summarize_text(text, c_size, c_overlap, state):
     return new_text, get_encoded_length(new_text)
 
 def summarize_text_to_size(text, c_size, c_overlap, final_size, state):
-    new_text, new_encode_len = summarize_text(text, c_size, c_overlap, state)
-    yield new_text, new_encode_len
-    if new_encode_len > get_encoded_length(text):
-        return "Error, summary was longer than original. Try a larger desired size, larger chunk size, or smaller chunk overlap."
-    if new_encode_len > final_size:
-        yield from summarize_text_to_size(new_text, c_size, c_overlap, final_size, state)
+    if text is None or text == "":
+        yield ""
+    else:
+        new_text, new_encode_len = summarize_text(text, c_size, c_overlap, state)
+        yield new_text, new_encode_len
+        if new_encode_len > get_encoded_length(text):
+            yield "Error, summary was longer than original. Try a larger desired size, larger chunk size, or smaller chunk overlap."
+        else if new_encode_len > final_size:
+            yield from summarize_text_to_size(new_text, c_size, c_overlap, final_size, state)

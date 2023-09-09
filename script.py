@@ -36,7 +36,7 @@ def ui():
                 chunk_overlap_slider = gr.Slider(0, 128, value=0, label="Chunk Overlap (Tokens)")
                 end_size_slider = gr.Slider(128, 65536, value=1024, step=64, label="Desired Text Size (Tokens)")
                 summarize_once_button = gr.Button("Summarize once", variant="primary")
-                summarize_until_desired_button = gr.Button("Summarize until Desired Text Size")
+                summarize_until_desired_button = gr.Button("Summarize until Desired Text Size", variant="primary")
                 cancel_button = gr.Button("Cancel")
             with gr.Tab(label="Query"):
                 pass
@@ -44,7 +44,7 @@ def ui():
             token_count_textbox = gr.Textbox(label="Token count:", interactive = False)
             output = gr.Textbox(label='Output:', interactive = False)
 
-        summarize_event = summarize_button.click(
+        summarize_event = summarize_once_button.click(
             gather_interface_values,
             inputs=gradio(list_interface_input_elements()),
             outputs=state
