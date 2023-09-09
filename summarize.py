@@ -3,6 +3,8 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from modules.text_generation import get_encoded_length, generate_reply
 
 def summarize_text(text, c_size, c_overlap, state):
+    if text is None or text == "":
+        return "No text to summarize", 0
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size = c_size,
         chunk_overlap  = c_overlap,

@@ -5,6 +5,7 @@ import re
 from modules.ui import gather_interface_values, list_interface_input_elements
 from modules.utils import gradio
 from modules.text_generation import get_encoded_length
+from modules import shared
 from extensions.PDFOoba.summarize import summarize_text, summarize_text_to_size
 
 params = {
@@ -21,7 +22,11 @@ def pdf_to_text(fileObject):
     doc = fitz.open(fileObject.name)
     text = "\n\n".join([preprocess(doc.load_page(i).get_text("text")) for i in range(doc.page_count)])
     doc.close()
-    return text, get_encoded_length(text)
+    if shared.tokenizer is None:
+        enc_length = "No model/tokenizer is loaded"
+    else:
+        enc_length = get_encoded_length(text)
+    return text, enc_length
 
 def ui():
     state = gr.State({})
@@ -64,6 +69,13 @@ def ui():
             outputs = [output, token_count_textbox]
         )
 
+        upload_event = f.upload(
+            pdf_to_text,
+            inputs = [f],
+            outputs = [output, token_count_textbox],
+            cancels=[summarize_event, summarize_until_desired_event]
+        )
+
         def cancel_summaries():
             pass
 
@@ -71,12 +83,7 @@ def ui():
             cancel_summaries,
             inputs=None,
             outputs=None,
-            cancels=[summarize_event, summarize_until_desired_event]
+            cancels=[summarize_event, summarize_until_desired_event, upload_event]
         )
         
-        f.upload(
-            pdf_to_text,
-            inputs = [f],
-            outputs = [output, token_count_textbox],
-            cancels=[summarize_event, summarize_until_desired_event]
-        )
+        
