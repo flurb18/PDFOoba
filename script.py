@@ -41,7 +41,7 @@ def ui():
             with gr.Tab(label="Query"):
                 pass
         with gr.Group():
-            token_count_textbox = gr.textBox(label="Token count:", interactive = False)
+            token_count_textbox = gr.Textbox(label="Token count:", interactive = False)
             output = gr.Textbox(label='Output:', interactive = False)
 
         summarize_event = summarize_button.click(
@@ -63,9 +63,20 @@ def ui():
             inputs = [output, chunk_size_slider, chunk_overlap_slider, end_size_slider, state],
             outputs = [output, token_count_textbox]
         )
+
+        def cancel_summaries():
+            pass
+
+        cancel_button.click(
+            cancel_summaries,
+            inputs=None,
+            outputs=None,
+            cancels=[summarize_event, summarize_until_desired_event]
+        )
         
         f.upload(
             pdf_to_text,
             inputs = [f],
-            outputs = [output, token_count_textbox]
+            outputs = [output, token_count_textbox],
+            cancels=[summarize_event, summarize_until_desired_event]
         )
